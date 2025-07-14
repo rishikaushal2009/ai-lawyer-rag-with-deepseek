@@ -1,11 +1,14 @@
 import streamlit as st
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from langchain_ollama import OllamaEmbeddings
+from langchain_ollama import OllamaEmbeddings, ChatOllama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_community.vectorstores import FAISS
-from langchain_groq import ChatGroq
 
 
 
@@ -19,13 +22,13 @@ Answer:
 """
 
 
-ollama_model_name="deepseek-r1:14b"
-embeddings = OllamaEmbeddings(model="deepseek-r1:14b")
+ollama_model_name="deepseek-r1:1.5b"  # 1.1GB model for better performance
+embeddings = OllamaEmbeddings(model="deepseek-r1:1.5b")
 FAISS_DB_PATH="vectorstore/db_faiss"
 
 
 pdfs_directory = 'pdfs/'
-llm_model=ChatGroq(model="deepseek-r1-distill-llama-70b")
+llm_model=ChatOllama(model="deepseek-r1:1.5b")
 
 def upload_pdf(file):
     with open(pdfs_directory + file.name, "wb") as f:
@@ -40,8 +43,8 @@ def load_pdf(file_path):
 
 def create_chunks(documents): 
     text_splitter = RecursiveCharacterTextSplitter(
-        chunk_size = 1000,
-        chunk_overlap = 200,
+        chunk_size = 500,
+        chunk_overlap = 50,
         add_start_index = True
     )
     text_chunks = text_splitter.split_documents(documents)

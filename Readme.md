@@ -26,6 +26,7 @@ Pipenv is a tool that manages dependencies and virtual environments for Python p
 2. Navigate to the project directory and create a virtual environment:
     ```
     pipenv install
+    pipenv --python /usr/bin/python3 install (wsl ubuntu 22.4)
     ```
 
 3. Activate the virtual environment:
